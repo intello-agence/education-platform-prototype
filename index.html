@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Intello School Manager — Dashboard Admin</title>
+  <link rel="stylesheet" href="./styles.css" />
+  
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+  
+  <!-- CountUp.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/countup.js/2.8.0/countUp.umd.min.js"></script>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="header-content">
+        <!-- Brand -->
+        <div class="brand">
+          <div class="brand-icon">🎓</div>
+          <div>
+            <div class="brand-name">Intello School Manager</div>
+            <div class="brand-sub">Dashboard Administration</div>
+          </div>
+        </div>
+
+        <!-- School Info -->
+        <div class="school-info">
+          <div class="school-name">École Sainte-Marie</div>
+          <div class="school-year">Année scolaire 2024-2025</div>
+        </div>
+
+        <!-- Actions -->
+        <div class="header-actions">
+          <button class="btn-icon" id="notificationsBtn" aria-label="Notifications">
+            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+            </svg>
+            <span class="badge">3</span>
+          </button>
+
+          <button class="btn-primary" id="generateBulletinBtn">
+            📄 Générer bulletins
+          </button>
+
+          <button class="btn-icon" id="refreshBtn" aria-label="Rafraîchir">
+            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container">
+
+      <!-- KPIs Grid -->
+      <section class="kpis-grid">
+        <!-- KPI 1: Élèves -->
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <div class="kpi-icon" style="background: linear-gradient(135deg, #06b6d4, #0891b2)">
+              <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+              </svg>
+            </div>
+            <div class="kpi-title">Élèves inscrits</div>
+          </div>
+          <div class="kpi-value" id="studentsCount">0</div>
+          <div class="kpi-change positive" id="studentsChange">
+            <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+            </svg>
+            <span>+0%</span>
+          </div>
+          <div class="kpi-label">vs trimestre précédent</div>
+        </div>
+
+        <!-- KPI 2: Paiements -->
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <div class="kpi-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706)">
+              <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+            <div class="kpi-title">Paiements en attente</div>
+          </div>
+          <div class="kpi-value" id="paymentsCount">0</div>
+          <div class="kpi-change negative" id="paymentsChange">
+            <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+            </svg>
+            <span>-0%</span>
+          </div>
+          <div class="kpi-label">Montant : <span id="paymentsAmount">0 FCFA</span></div>
+        </div>
+
+        <!-- KPI 3: Moyenne générale -->
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <div class="kpi-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed)">
+              <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+              </svg>
+            </div>
+            <div class="kpi-title">Moyenne générale</div>
+          </div>
+          <div class="kpi-value" id="averageGrade">0</div>
+          <div class="kpi-change positive" id="averageChange">
+            <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+            </svg>
+            <span>+0</span>
+          </div>
+          <div class="kpi-label">sur 20 points</div>
+        </div>
+
+        <!-- KPI 4: Absences -->
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <div class="kpi-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626)">
+              <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+            <div class="kpi-title">Absences aujourd'hui</div>
+          </div>
+          <div class="kpi-value" id="absencesCount">0</div>
+          <div class="kpi-change negative" id="absencesChange">
+            <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+            </svg>
+            <span>-0</span>
+          </div>
+          <div class="kpi-label">Taux : <span id="absenceRate">0%</span></div>
+        </div>
+      </section>
+
+      <!-- Chart Section -->
+      <section class="chart-section">
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <h2 class="chart-title">Évolution des moyennes par classe</h2>
+              <p class="chart-subtitle">Suivi trimestriel (T1 → T2 → T3)</p>
+            </div>
+            <div class="chart-filters">
+              <select class="filter-select" id="classFilter">
+                <option value="all">Toutes les classes</option>
+                <option value="6eme">6ème</option>
+                <option value="5eme">5ème</option>
+                <option value="4eme">4ème</option>
+                <option value="3eme">3ème</option>
+              </select>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="gradesChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- Students & Payments Section -->
+      <section class="data-section">
+        
+        <!-- Students Table -->
+        <div class="data-card">
+          <div class="data-header">
+            <h3 class="data-title">Liste des élèves</h3>
+            <div class="data-actions">
+              <input type="text" id="searchStudent" placeholder="Rechercher..." class="search-input" />
+              <select class="filter-select-sm" id="filterClass">
+                <option value="">Toutes classes</option>
+                <option value="6eme">6ème</option>
+                <option value="5eme">5ème</option>
+                <option value="4eme">4ème</option>
+                <option value="3eme">3ème</option>
+              </select>
+              <select class="filter-select-sm" id="filterPayment">
+                <option value="">Tous statuts</option>
+                <option value="paid">✓ Payé</option>
+                <option value="pending">⏳ En attente</option>
+                <option value="late">⚠️ Retard</option>
+              </select>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Nom complet</th>
+                  <th>Classe</th>
+                  <th>Moyenne</th>
+                  <th>Absences</th>
+                  <th>Paiement</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="studentsTableBody">
+                <!-- Rempli par JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Recent Payments -->
+        <div class="data-card">
+          <div class="data-header">
+            <h3 class="data-title">Paiements récents</h3>
+            <button class="btn-text" id="exportPaymentsBtn">📊 Exporter</button>
+          </div>
+          <div class="payments-list" id="paymentsList">
+            <!-- Rempli par JS -->
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-left">
+          <span class="footer-badge">Prototype</span>
+          <span class="footer-text">Données fictives • Design Intello</span>
+        </div>
+        <div class="footer-right">
+          <span class="footer-text">Conçu avec ❤️ à Dakar</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Generate Bulletin Modal -->
+  <div id="bulletinModal" class="modal">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Génération des bulletins</h3>
+        <button class="modal-close" id="closeBulletinModal" aria-label="Fermer">
+          <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-form">
+          <label class="form-label">
+            Trimestre
+            <select class="form-select" id="trimesterSelect">
+              <option value="T1">Trimestre 1</option>
+              <option value="T2">Trimestre 2</option>
+              <option value="T3" selected>Trimestre 3</option>
+            </select>
+          </label>
+
+          <label class="form-label">
+            Classe
+            <select class="form-select" id="bulletinClassSelect">
+              <option value="all">Toutes les classes</option>
+              <option value="6eme">6ème</option>
+              <option value="5eme">5ème</option>
+              <option value="4eme">4ème</option>
+              <option value="3eme">3ème</option>
+            </select>
+          </label>
+
+          <div class="form-info">
+            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <span>Les bulletins seront générés au format PDF avec moyennes, classements et appréciations.</span>
+          </div>
+
+          <button class="btn-primary btn-block" id="generateBtn">
+            📄 Générer les bulletins (PDF)
+          </button>
+
+          <div id="generationProgress" class="progress-section hidden">
+            <div class="progress-bar">
+              <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">Génération en cours...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Student Detail Modal -->
+  <div id="studentModal" class="modal">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="studentModalTitle">Détails élève</h3>
+        <button class="modal-close" id="closeStudentModal" aria-label="Fermer">
+          <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body" id="studentModalBody">
+        <!-- Rempli par JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notifications -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
