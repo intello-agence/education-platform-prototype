@@ -1,53 +1,99 @@
+<!--
+╔══════════════════════════════════════════════════════════════════════════════╗
+║ INTELLO SCHOOL MANAGER — PROTOTYPE ÉDUCATION                                ║
+║──────────────────────────────────────────────────────────────────────────────║
+║ Description : Dashboard administration scolaire avec gestion élèves         ║
+║               • Vue admin : KPIs (élèves, paiements, moyenne, absences)      ║
+║               • Chart.js : évolution moyennes par classe (trimestriel)       ║
+║               • Table élèves : filtres (classe, paiement), recherche         ║
+║               • Paiements récents + export                                   ║
+║               • Modals : génération bulletins PDF, détails élève             ║
+║──────────────────────────────────────────────────────────────────────────────║
+║ Auteur      : Patrick Junior Samba Ntadi (Intello)                           ║
+║ Date        : Janvier 2025                                                   ║
+║ Stack       : HTML5 + Vanilla JS + Chart.js 4.4.0 + CountUp.js 2.8.0        ║
+║ Licence     : MIT (Projet de démonstration)                                  ║
+║──────────────────────────────────────────────────────────────────────────────║
+║ Librairies externes :                                                        ║
+║  - Chart.js 4.4.0 : graphique évolution moyennes                             ║
+║  - CountUp.js 2.8.0 : animations KPIs numériques                             ║
+║──────────────────────────────────────────────────────────────────────────────║
+║ Note : Prototype non-indexable (noindex). Données fictives École Sainte-Marie║
+╚══════════════════════════════════════════════════════════════════════════════╝
+-->
 <!doctype html>
 <html lang="fr">
 <head>
+  <!-- Encodage et viewport -->
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Intello School Manager — Dashboard Admin</title>
+  
+  <!-- SEO Prototype (version light, non-indexé) -->
+  <title>Intello School Manager — Dashboard Administration Scolaire | Intello</title>
+  <meta name="description" content="Dashboard administration scolaire avec KPIs temps réel (élèves, paiements, moyennes), graphique Chart.js évolution par classe, gestion élèves et bulletins PDF. Prototype Intello." />
+  <meta name="robots" content="noindex,nofollow" />
+  <meta name="author" content="Patrick Junior Samba Ntadi - Intello" />
+  
+  <!-- Favicon (emoji SVG placeholder) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>" />
+  
+  <!-- Styles principaux -->
   <link rel="stylesheet" href="./styles.css" />
   
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
-  
-  <!-- CountUp.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/countup.js/2.8.0/countUp.umd.min.js"></script>
+  <!-- Scripts (defer = téléchargement parallèle, exécution après DOM ready) -->
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/countup.js/2.8.0/countUp.umd.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
-  <!-- Header -->
-  <header class="header">
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       SKIP LINK (Accessibilité clavier)
+       ═══════════════════════════════════════════════════════════════════════ -->
+  <a href="#mainContent" class="skip-link">Aller au contenu principal</a>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       HEADER : Navigation principale
+       • Brand + logo école
+       • Infos établissement (nom, année)
+       • Actions : Notifications, Génération bulletins, Refresh
+       ═══════════════════════════════════════════════════════════════════════ -->
+  <header class="header" id="mainHeader">
     <div class="container">
       <div class="header-content">
+        
         <!-- Brand -->
         <div class="brand">
-          <div class="brand-icon">🎓</div>
+          <div class="brand-icon" aria-hidden="true">🎓</div>
           <div>
             <div class="brand-name">Intello School Manager</div>
             <div class="brand-sub">Dashboard Administration</div>
           </div>
         </div>
 
-        <!-- School Info -->
+        <!-- School Info (établissement actuel) -->
         <div class="school-info">
           <div class="school-name">École Sainte-Marie</div>
           <div class="school-year">Année scolaire 2024-2025</div>
         </div>
 
-        <!-- Actions -->
+        <!-- Actions utilisateur -->
         <div class="header-actions">
-          <button class="btn-icon" id="notificationsBtn" aria-label="Notifications">
-            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <!-- Bouton notifications -->
+          <button class="btn-icon" id="notificationsBtn" aria-label="Voir les notifications (3 non lues)">
+            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
             </svg>
-            <span class="badge">3</span>
+            <span class="badge" aria-live="polite">3</span>
           </button>
 
+          <!-- Bouton génération bulletins -->
           <button class="btn-primary" id="generateBulletinBtn">
-            📄 Générer bulletins
+            <span aria-hidden="true">📄</span> Générer bulletins
           </button>
 
-          <button class="btn-icon" id="refreshBtn" aria-label="Rafraîchir">
-            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <!-- Bouton refresh -->
+          <button class="btn-icon" id="refreshBtn" aria-label="Rafraîchir les données du dashboard">
+            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
             </svg>
           </button>
@@ -56,103 +102,115 @@
     </div>
   </header>
 
-  <!-- Main Content -->
-  <main class="main-content">
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       MAIN : Contenu principal du dashboard
+       • KPIs (élèves, paiements, moyenne, absences)
+       • Graphique Chart.js (moyennes par classe)
+       • Table élèves + Paiements récents
+       ═══════════════════════════════════════════════════════════════════════ -->
+  <main class="main-content" id="mainContent">
     <div class="container">
 
-      <!-- KPIs Grid -->
-      <section class="kpis-grid">
-        <!-- KPI 1: Élèves -->
-        <div class="kpi-card">
+      <!-- ─────────────────────────────────────────────────────────────────
+           KPIs : 4 indicateurs principaux
+           ───────────────────────────────────────────────────────────────── -->
+      <section class="kpis-grid" role="region" aria-labelledby="kpisTitle">
+        <h2 id="kpisTitle" class="sr-only">Indicateurs clés de performance</h2>
+
+        <!-- KPI 1: Élèves inscrits -->
+        <article class="kpi-card">
           <div class="kpi-header">
-            <div class="kpi-icon" style="background: linear-gradient(135deg, #06b6d4, #0891b2)">
+            <div class="kpi-icon" style="background: linear-gradient(135deg, #06b6d4, #0891b2)" aria-hidden="true">
               <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
               </svg>
             </div>
-            <div class="kpi-title">Élèves inscrits</div>
+            <h3 class="kpi-title">Élèves inscrits</h3>
           </div>
-          <div class="kpi-value" id="studentsCount">0</div>
-          <div class="kpi-change positive" id="studentsChange">
-            <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="kpi-value" id="studentsCount" aria-live="polite">0</div>
+          <div class="kpi-change positive" id="studentsChange" aria-live="polite">
+            <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
             </svg>
             <span>+0%</span>
           </div>
           <div class="kpi-label">vs trimestre précédent</div>
-        </div>
+        </article>
 
-        <!-- KPI 2: Paiements -->
-        <div class="kpi-card">
+        <!-- KPI 2: Paiements en attente -->
+        <article class="kpi-card">
           <div class="kpi-header">
-            <div class="kpi-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706)">
+            <div class="kpi-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706)" aria-hidden="true">
               <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
             </div>
-            <div class="kpi-title">Paiements en attente</div>
+            <h3 class="kpi-title">Paiements en attente</h3>
           </div>
-          <div class="kpi-value" id="paymentsCount">0</div>
-          <div class="kpi-change negative" id="paymentsChange">
-            <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="kpi-value" id="paymentsCount" aria-live="polite">0</div>
+          <div class="kpi-change negative" id="paymentsChange" aria-live="polite">
+            <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
             </svg>
             <span>-0%</span>
           </div>
-          <div class="kpi-label">Montant : <span id="paymentsAmount">0 FCFA</span></div>
-        </div>
+          <div class="kpi-label">Montant : <span id="paymentsAmount" aria-live="polite">0 FCFA</span></div>
+        </article>
 
-        <!-- KPI 3: Moyenne générale -->
-        <div class="kpi-card">
+        <!-- KPI 3: Moyenne générale établissement -->
+        <article class="kpi-card">
           <div class="kpi-header">
-            <div class="kpi-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed)">
+            <div class="kpi-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed)" aria-hidden="true">
               <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
               </svg>
             </div>
-            <div class="kpi-title">Moyenne générale</div>
+            <h3 class="kpi-title">Moyenne générale</h3>
           </div>
-          <div class="kpi-value" id="averageGrade">0</div>
-          <div class="kpi-change positive" id="averageChange">
-            <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="kpi-value" id="averageGrade" aria-live="polite">0</div>
+          <div class="kpi-change positive" id="averageChange" aria-live="polite">
+            <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
             </svg>
             <span>+0</span>
           </div>
           <div class="kpi-label">sur 20 points</div>
-        </div>
+        </article>
 
-        <!-- KPI 4: Absences -->
-        <div class="kpi-card">
+        <!-- KPI 4: Absences aujourd'hui -->
+        <article class="kpi-card">
           <div class="kpi-header">
-            <div class="kpi-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626)">
+            <div class="kpi-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626)" aria-hidden="true">
               <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
             </div>
-            <div class="kpi-title">Absences aujourd'hui</div>
+            <h3 class="kpi-title">Absences aujourd'hui</h3>
           </div>
-          <div class="kpi-value" id="absencesCount">0</div>
-          <div class="kpi-change negative" id="absencesChange">
-            <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="kpi-value" id="absencesCount" aria-live="polite">0</div>
+          <div class="kpi-change negative" id="absencesChange" aria-live="polite">
+            <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
             </svg>
             <span>-0</span>
           </div>
-          <div class="kpi-label">Taux : <span id="absenceRate">0%</span></div>
-        </div>
+          <div class="kpi-label">Taux : <span id="absenceRate" aria-live="polite">0%</span></div>
+        </article>
       </section>
 
-      <!-- Chart Section -->
-      <section class="chart-section">
+      <!-- ─────────────────────────────────────────────────────────────────
+           GRAPHIQUE : Évolution moyennes par classe
+           ───────────────────────────────────────────────────────────────── -->
+      <section class="chart-section" aria-labelledby="chartTitle">
         <div class="chart-card">
           <div class="chart-header">
             <div>
-              <h2 class="chart-title">Évolution des moyennes par classe</h2>
+              <h2 id="chartTitle" class="chart-title">Évolution des moyennes par classe</h2>
               <p class="chart-subtitle">Suivi trimestriel (T1 → T2 → T3)</p>
             </div>
             <div class="chart-filters">
-              <select class="filter-select" id="classFilter">
+              <label for="classFilter" class="sr-only">Filtrer par classe</label>
+              <select class="filter-select" id="classFilter" name="class">
                 <option value="all">Toutes les classes</option>
                 <option value="6eme">6ème</option>
                 <option value="5eme">5ème</option>
@@ -162,28 +220,41 @@
             </div>
           </div>
           <div class="chart-container">
-            <canvas id="gradesChart"></canvas>
+            <canvas id="gradesChart" role="img" aria-label="Graphique linéaire de l'évolution des moyennes par classe sur 3 trimestres"></canvas>
           </div>
         </div>
       </section>
 
-      <!-- Students & Payments Section -->
+      <!-- ─────────────────────────────────────────────────────────────────
+           DATA SECTION : Table élèves + Paiements récents
+           ───────────────────────────────────────────────────────────────── -->
       <section class="data-section">
         
-        <!-- Students Table -->
+        <!-- Table Élèves -->
         <div class="data-card">
           <div class="data-header">
-            <h3 class="data-title">Liste des élèves</h3>
+            <h2 class="data-title">Liste des élèves</h2>
             <div class="data-actions">
-              <input type="text" id="searchStudent" placeholder="Rechercher..." class="search-input" />
-              <select class="filter-select-sm" id="filterClass">
+              <label for="searchStudent" class="sr-only">Rechercher un élève</label>
+              <input 
+                type="search" 
+                id="searchStudent" 
+                name="search"
+                placeholder="Rechercher..." 
+                class="search-input"
+                autocomplete="off"
+                aria-label="Rechercher un élève par nom"
+              />
+              <label for="filterClass" class="sr-only">Filtrer par classe</label>
+              <select class="filter-select-sm" id="filterClass" name="filterClass">
                 <option value="">Toutes classes</option>
                 <option value="6eme">6ème</option>
                 <option value="5eme">5ème</option>
                 <option value="4eme">4ème</option>
                 <option value="3eme">3ème</option>
               </select>
-              <select class="filter-select-sm" id="filterPayment">
+              <label for="filterPayment" class="sr-only">Filtrer par statut paiement</label>
+              <select class="filter-select-sm" id="filterPayment" name="filterPayment">
                 <option value="">Tous statuts</option>
                 <option value="paid">✓ Payé</option>
                 <option value="pending">⏳ En attente</option>
@@ -195,29 +266,31 @@
             <table class="data-table">
               <thead>
                 <tr>
-                  <th>Nom complet</th>
-                  <th>Classe</th>
-                  <th>Moyenne</th>
-                  <th>Absences</th>
-                  <th>Paiement</th>
-                  <th>Actions</th>
+                  <th scope="col">Nom complet</th>
+                  <th scope="col">Classe</th>
+                  <th scope="col">Moyenne</th>
+                  <th scope="col">Absences</th>
+                  <th scope="col">Paiement</th>
+                  <th scope="col">Actions</th>
                 </tr>
               </thead>
               <tbody id="studentsTableBody">
-                <!-- Rempli par JS -->
+                <!-- Rempli dynamiquement par app.js -->
               </tbody>
             </table>
           </div>
         </div>
 
-        <!-- Recent Payments -->
+        <!-- Paiements récents -->
         <div class="data-card">
           <div class="data-header">
-            <h3 class="data-title">Paiements récents</h3>
-            <button class="btn-text" id="exportPaymentsBtn">📊 Exporter</button>
+            <h2 class="data-title">Paiements récents</h2>
+            <button class="btn-text" id="exportPaymentsBtn" aria-label="Exporter les paiements en CSV">
+              <span aria-hidden="true">📊</span> Exporter
+            </button>
           </div>
-          <div class="payments-list" id="paymentsList">
-            <!-- Rempli par JS -->
+          <div class="payments-list" id="paymentsList" role="region" aria-live="polite">
+            <!-- Rempli dynamiquement par app.js -->
           </div>
         </div>
 
@@ -226,7 +299,9 @@
     </div>
   </main>
 
-  <!-- Footer -->
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════════════════════════════════════ -->
   <footer class="footer">
     <div class="container">
       <div class="footer-content">
@@ -235,29 +310,33 @@
           <span class="footer-text">Données fictives • Design Intello</span>
         </div>
         <div class="footer-right">
-          <span class="footer-text">Conçu par intello</span>
+          <span class="footer-text">Conçu par <strong>Intello</strong></span>
         </div>
       </div>
     </div>
   </footer>
 
-  <!-- Generate Bulletin Modal -->
-  <div id="bulletinModal" class="modal">
-    <div class="modal-overlay"></div>
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       MODALS
+       ═══════════════════════════════════════════════════════════════════════ -->
+
+  <!-- Modal : Génération bulletins PDF -->
+  <div id="bulletinModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="bulletinModalTitle" hidden>
+    <div class="modal-overlay" aria-hidden="true"></div>
     <div class="modal-content">
       <div class="modal-header">
-        <h3>Génération des bulletins</h3>
-        <button class="modal-close" id="closeBulletinModal" aria-label="Fermer">
-          <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <h2 id="bulletinModalTitle" class="h3">Génération des bulletins</h2>
+        <button class="modal-close" id="closeBulletinModal" aria-label="Fermer la fenêtre de génération">
+          <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
           </svg>
         </button>
       </div>
       <div class="modal-body">
-        <div class="modal-form">
+        <form class="modal-form" id="bulletinForm" novalidate>
           <label class="form-label">
-            Trimestre
-            <select class="form-select" id="trimesterSelect">
+            <span>Trimestre</span>
+            <select class="form-select" id="trimesterSelect" name="trimestre">
               <option value="T1">Trimestre 1</option>
               <option value="T2">Trimestre 2</option>
               <option value="T3" selected>Trimestre 3</option>
@@ -265,8 +344,8 @@
           </label>
 
           <label class="form-label">
-            Classe
-            <select class="form-select" id="bulletinClassSelect">
+            <span>Classe</span>
+            <select class="form-select" id="bulletinClassSelect" name="classe">
               <option value="all">Toutes les classes</option>
               <option value="6eme">6ème</option>
               <option value="5eme">5ème</option>
@@ -276,48 +355,54 @@
           </label>
 
           <div class="form-info">
-            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
             <span>Les bulletins seront générés au format PDF avec moyennes, classements et appréciations.</span>
           </div>
 
-          <button class="btn-primary btn-block" id="generateBtn">
-            📄 Générer les bulletins (PDF)
+          <button type="submit" class="btn-primary btn-block">
+            <span aria-hidden="true">📄</span> Générer les bulletins (PDF)
           </button>
 
           <div id="generationProgress" class="progress-section hidden">
             <div class="progress-bar">
               <div class="progress-fill" id="progressFill"></div>
             </div>
-            <div class="progress-text" id="progressText">Génération en cours...</div>
+            <div class="progress-text" id="progressText" aria-live="assertive">Génération en cours...</div>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   </div>
 
-  <!-- Student Detail Modal -->
-  <div id="studentModal" class="modal">
-    <div class="modal-overlay"></div>
+  <!-- Modal : Détails élève -->
+  <div id="studentModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="studentModalTitle" hidden>
+    <div class="modal-overlay" aria-hidden="true"></div>
     <div class="modal-content">
       <div class="modal-header">
-        <h3 id="studentModalTitle">Détails élève</h3>
-        <button class="modal-close" id="closeStudentModal" aria-label="Fermer">
-          <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <h2 id="studentModalTitle" class="h3">Détails élève</h2>
+        <button class="modal-close" id="closeStudentModal" aria-label="Fermer les détails de l'élève">
+          <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
           </svg>
         </button>
       </div>
       <div class="modal-body" id="studentModalBody">
-        <!-- Rempli par JS -->
+        <!-- Rempli dynamiquement par app.js -->
       </div>
     </div>
   </div>
 
-  <!-- Toast Notifications -->
-  <div id="toastContainer" class="toast-container"></div>
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       TOAST NOTIFICATIONS
+       Zone pour notifications toast (succès/erreur/info)
+       ═══════════════════════════════════════════════════════════════════════ -->
+  <div id="toastContainer" class="toast-container" role="region" aria-live="polite" aria-atomic="true"></div>
 
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       SCRIPT PRINCIPAL (chargé en dernier = non bloquant)
+       ═══════════════════════════════════════════════════════════════════════ -->
   <script src="./app.js"></script>
 </body>
 </html>

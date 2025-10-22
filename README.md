@@ -1,124 +1,256 @@
-# 🎓 Education Platform — Dashboard Administration
+# 🎓 Intello School Manager — Prototype Éducation (Dashboard Admin)
 
-Tableau de bord administratif pour gestion scolaire — Prototype premium par [Intello](https://intello.sn).
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Status](https://img.shields.io/badge/status-demo-orange.svg)
 
-![Interface Tableau de bord](screenshots/interface_tableau_de_bord.png)
+Prototype d’administration scolaire avec KPIs, graphique d’évolution des moyennes par classe, gestion des élèves (filtres/recherche) et suivi des paiements récents.
 
----
-
-## ✨ Fonctionnalités
-
-- **📊 KPIs temps réel** : Élèves inscrits, paiements en attente, moyenne générale, absences
-- **📈 Graphiques évolution** : Moyennes par classe sur 3 trimestres (Chart.js)
-- **👥 Gestion élèves** : Table avec filtres (classe, statut paiement, recherche)
-- **💰 Suivi paiements** : Transactions récentes avec méthodes (Wave, Orange Money)
-- **📄 Génération bulletins** : Modal avec sélection trimestre/classe + progress bar
-- **🔍 Fiches détaillées** : Modal élève avec notes par matière
-- **🔔 Notifications** : Toast system pour feedback utilisateur
-- **📱 Responsive** : Optimisé mobile/tablette/desktop
+Développé par [Intello](https://github.com/intello-agence).
 
 ---
 
-## 🛠️ Stack technique
+## 📋 Vue d’ensemble
 
-- **HTML5 + CSS3** : Variables CSS, glassmorphism, animations
-- **JavaScript ES6+** : Vanilla (state management, filtres dynamiques)
-- **Chart.js 4.4** : Graphiques évolution moyennes
-- **CountUp.js 2.8** : Animations KPIs
-- **Données** : ~200 élèves fictifs avec noms sénégalais réalistes
+Fonctionnalités principales :
+- KPIs temps réel (CountUp.js)
+  - Élèves inscrits
+  - Paiements en attente (+ montant total estimé)
+  - Moyenne générale établissement
+  - Absences du jour (+ taux)
+- Graphique Chart.js
+  - Évolution des moyennes par classe (6ème → 3ème) sur 3 trimestres
+  - Filtre par classe (ou toutes classes)
+- Élèves
+  - Table filtrable et recherchable (classe, statut de paiement, recherche par nom)
+  - Badges paiement (✓ Payé, ⏳ En attente, ⚠️ Retard)
+  - Détails élève (modal) : moyenne, absences, paiement, notes par matière (simulation)
+- Paiements récents
+  - Liste des 10 derniers paiements (montant, date, méthode Wave/Orange Money)
+  - Bouton Export (placeholder)
+- Bulletins PDF (modal)
+  - Sélection trimestre + classe
+  - Barre de progression simulée
+  - Toast de succès à la fin
+
+Technologies :
+- HTML5 sémantique (ARIA, skip link)
+- CSS3 (glassmorphism, responsive, animations)
+- Vanilla JavaScript ES6+ (IIFE, strict mode)
+- Chart.js 4.4.0 (graphique)
+- CountUp.js 2.8.0 (KPIs)
 
 ---
 
-## 🚀 Installation
+## ✨ Détails des fonctionnalités
 
-### Option 1 : Ouverture directe
-Double-cliquez sur `index.html`
+### KPIs (header dashboard)
+- Animations numériques (CountUp)
+- Badges de variation (positif/negatif) avec code couleur
+- Calculs automatiques à partir de données simulées (notes, paiements, absences)
 
-### Option 2 : Serveur local
+### Graphique (moyennes par classe)
+- Ligne multi-datasets (6ème, 5ème, 4ème, 3ème)
+- Simulation de progression T1 → T2 → T3
+- Filtre par classe (drop-down) avec mise à jour instantanée
 
+### Table Élèves
+- Recherche live par nom (debounce 300ms)
+- Filtres par classe et par statut de paiement
+- Badges statut: paid / pending / late
+- Bouton “Détails” → modal fiche élève (infos + notes par matière générées)
 
-# Cloner le repo
-git clone https://github.com/intello-agence/education-platform-prototype.git
-cd education-platform-prototype
+### Paiements récents
+- 10 dernières entrées (élève, classe, montant, date, méthode)
+- Bouton Export (placeholder — toast d’information)
 
-# Lancer serveur
-python -m http.server 8000
-# OU
-npx http-server -p 8000
+### Génération des bulletins
+- Modal avec trimestre + classe
+- Barre de progression 0 → 100%
+- Toast de succès à la fin
 
+---
 
-Puis ouvrir http://localhost:8000
+## 🖼️ Screenshots
 
-📸 Screenshots
+### Dashboard principal (KPIs + Graphique + Filtres)
+![Dashboard Main](./screenshots/interface_tableau_de_bord.png)
 
-Interface tableau de bord
+### Table des élèves (Filtres + Recherche)
+![Students Table](./screenshots/liste_eleves.png)
 
-![Interface Tableau de bord](screenshots/interface_tableau_de_bord.png)
+---
 
-Liste élèves avec filtres
-Liste élèves
-![Liste élèves](screenshots/liste_eleves.png)
+## 📦 Installation & Utilisation
 
+Prérequis
+- Navigateur moderne (Chrome 90+, Firefox 88+, Safari 14+, Edge 90+)
+- Aucun build requis (CDN Chart.js & CountUp.js)
 
+Lancement rapide
+1. Cloner le repository
+   ```bash
+   git clone https://github.com/intello-agence/education-platform-prototype.git
+   cd education-platform-prototype
+   ```
 
-📦 Structure
+2. Ouvrir dans le navigateur
+   - Méthode 1 (simple) : Double-clic sur index.html
+   - Méthode 2 (serveur local) :
+     ```bash
+     # Python 3
+     python -m http.server 8000
+     # puis visiter http://localhost:8000
 
+     # Node.js
+     npx http-server -p 8000
+     ```
+
+3. Tester
+   - Filtrer la table (classe, paiement)
+   - Rechercher un élève (ex: “Amadou”)
+   - Ouvrir la modal “Générer bulletins” et lancer la progression
+   - Changer la classe du graphique
+
+---
+
+## 🗂️ Structure du projet
+
+```
 education-platform-prototype/
-├── index.html          # Structure HTML (dashboard admin)
-├── styles.css          # Styles glassmorphism + animations
-├── app.js              # Logique métier (KPIs, filtres, génération)
+├── index.html          # Page principale (HTML5 sémantique + ARIA)
+├── styles.css          # Styles (glassmorphism, responsive, a11y)
+├── app.js              # Logique (KPIs, Chart.js, tables, modals)
 ├── screenshots/        # Captures d'écran
-│   ├── interface_tableau_de_bord.png
-│   └── liste_eleves.png
+│   ├── dashboard_main.png
+│   └── students_table.png
 └── README.md           # Documentation
+```
 
+---
 
-🎮 Utilisation
+## 🎨 Design System
 
-Fonctionnalités principales
-Fonctionnalité	Description
-KPIs animés	Élèves, paiements, moyenne, absences avec CountUp
-Filtres élèves	Par classe (6ème-3ème), statut paiement, recherche nom
-Chart évolution	Moyennes par classe sur 3 trimestres
-Génération bulletins	Sélection trimestre + classe → progress bar simulation
-Détails élève	Modal avec notes par matière + infos paiement
-Données générées
-Classes : 6ème, 5ème, 4ème, 3ème (~50 élèves/classe)
-Noms : Prénoms et noms sénégalais (Amadou Diallo, Fatou Ndiaye, etc.)
-Notes : Aléatoires entre 8-18/20 avec distribution réaliste
-Statuts paiement : Payé (70%), En attente (20%), Retard (10%)
-🎨 Personnalisation
-Les données sont générées dans app.js (fonction generateStudents()).
+Palette
+- Background: #0a0f1a → #0b1220 (dégradé)
+- Accents: Cyan #06b6d4, Purple #8b5cf6
+- États: Success #22c55e, Warning #f59e0b, Danger #ef4444
+- Surfaces: glassmorphism rgba(255,255,255,0.03-0.06)
 
-Pour connecter une vraie base de données :
+Typographie
+- Inter (fallback: system-ui)
+- Poids: 400 / 600 / 700 / 800
 
-// Remplacer la génération par fetch API
-async function recupererEleves() {
-  const res = await fetch('/api/eleves');
-  return res.json();
-}
+Responsive
+- 1200px: KPIs en 2 colonnes; data-section en 1 colonne
+- 768px: header wrap; school-info passe dessous; table filtres en colonne; chart height 260px; footer en colonne
 
-🔗 Lien avec landing page
-Ce prototype illustre le SaaS Intello School Manager présenté sur :
-👉 intello.sn/offres/ecoles/
+---
 
-📄 Licence
-MIT License — Libre d'utilisation commerciale et personnelle.
+## 🛠️ Stack Technique (détaillé)
 
-👤 Auteur
-Intello — Agence digitale Dakar 🇸🇳
+| Composant | Tech | Version | Usage |
+|---|---|---|---|
+| Front-end | HTML5 | — | Sémantique, ARIA, skip link |
+| Styles | CSS3 | — | Glassmorphism, grid/flex, responsive |
+| Logic | Vanilla JS | ES6+ | IIFE, modules pattern, events |
+| Graphique | Chart.js | 4.4.0 | Ligne multi-datasets |
+| KPIs | CountUp.js | 2.8.0 | Animations numériques |
+| CDN | jsDelivr/cdnjs | — | Scripts non-bloquants (defer) |
 
-🌐 Site : intello.sn
-📧 Email : intellopjsn@gmail.com
-📱 WhatsApp : +221 77 553 28 04
-💼 GitHub : @intello-agence
-⭐ Support
-Si ce prototype vous a été utile :
+---
 
-⭐ Star le repo
-🐦 Partager sur LinkedIn
-📧 Nous contacter pour un projet sur mesure
+## ⚡ Performance & Optimisations
 
-Fait par Intello
+- Debounce recherche (300ms)
+- Chart.js destroy avant re-création (pas de memory leak)
+- Canvas responsive (maintainAspectRatio: false)
+- CSS will-change pour animations
+- Scripts Chart/CountUp en `defer` (rendu non bloqué)
 
-```bash
+---
+
+## 🔐 Sécurité & Accessibilité
+
+Sécurité
+- Échappement HTML (escapeHTML) pour tout innerHTML dynamique
+- Aucune exécution arbitraire (pas de eval)
+- Données 100% fictives côté client
+
+Accessibilité
+- Skip link
+- ARIA sur modals (role="dialog", aria-modal, aria-labelledby)
+- aria-live pour KPIs et progress
+- Focus visible personnalisé
+- Table avec scope col et min-width + scrolling horizontal
+
+---
+
+## 🧪 Tests manuels (checklist)
+
+Fonctionnel
+- [ ] Recherche élève (“Amadou”) → résultats filtrés
+- [ ] Filtre classe (“4ème”) → table mise à jour
+- [ ] Filtre paiement (“En attente”) → badges 🟡
+- [ ] Ouvrir “Détails” élève → modal (notes par matière)
+- [ ] Graphique : changer “Classe” → datasets mis à jour
+- [ ] “Générer bulletins” → progression 0→100% + toast succès
+- [ ] “Rafraîchir” → données régénérées + toast
+
+Accessibilité
+- [ ] Navigation clavier (Tab, Shift+Tab)
+- [ ] Escape ferme les modals
+- [ ] Skip link visible au focus
+- [ ] Focus visible sur tous les interactifs
+- [ ] aria-live pour progress/compteurs
+
+---
+
+## 📝 Limitations & Roadmap
+
+Limitations (prototype)
+- Données fictives (pas d’API)
+- Export paiements = placeholder (toast)
+- Bulletins PDF simulés (pas de génération réelle)
+- Pas d’authentification
+
+Roadmap (prod)
+- Backend API (Node/Express + DB)
+- Authentification (JWT)
+- Génération PDF réelle (Puppeteer/PDFKit)
+- Historique paiements + export CSV/Excel
+- Notifications temps réel (WebSocket)
+- Profils élèves (parents, contacts, années précédentes)
+- Tests E2E (Playwright/Cypress)
+- CI/CD (GitHub Actions)
+
+---
+
+## 👤 Auteur
+
+**Patrick Junior Samba Ntadi**  
+Fondateur — Intello  
+📍 Dakar, Sénégal
+
+- GitHub : [@intello-agence](https://github.com/intello-agence)
+
+---
+
+## 📄 Licence
+
+MIT License — Libre d’utilisation pour démonstration/apprentissage.
+
+Note : Ce projet est un prototype de démonstration destiné à illustrer les compétences techniques d’Intello. Les données sont fictives et ne doivent pas être utilisées en production.
+
+---
+
+## 🙏 Crédits
+
+- Charting : [Chart.js](https://www.chartjs.org)
+- KPIs : [CountUp.js](https://inorganik.github.io/countUp.js/)
+- Icônes : Emojis + SVG inline
+- Inspiration UI : Dashboards école/edtech modernes
+
+---
+
+**✨ Conçu par Intello | © 2025**
+```
