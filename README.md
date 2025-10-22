@@ -253,4 +253,3 @@ Note : Ce projet est un prototype de démonstration destiné à illustrer les co
 ---
 
 **✨ Conçu par Intello | © 2025**
-```
